@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { CursosService } from '../services/cursos.service';
 import { Course } from '../interfaces/course';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-courses',
@@ -12,13 +13,18 @@ import { Course } from '../interfaces/course';
 })
 export class CoursesComponent implements OnInit {
   courses$: Observable<Course[]>;
-  displayedColumns = ['name', 'category'];
+  displayedColumns = ['name', 'category', 'actions'];
 
   constructor(
     private coursesSrv: CursosService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.courses$ = this.coursesSrv.getAllCourses().pipe(
+      tap((res) => {
+        _snackBar.open('Cursos carregados ', undefined, { duration: 3000 });
+      }),
       catchError((err) => {
         console.error(err.message);
         _snackBar.open('Ocorreu um erro: ' + err.status, undefined, {
@@ -29,8 +35,8 @@ export class CoursesComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {
-    this.listCourses();
+  ngOnInit(): void {}
+  onAdd() {
+    this.router.navigate(['novo-curso'], { relativeTo: this.route });
   }
-  listCourses() {}
 }

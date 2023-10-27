@@ -9,9 +9,13 @@ import { Course } from '../interfaces/course';
 export class CursosService {
   constructor(private httpClient: HttpClient) {}
 
-  private readonly API = '/assets/courses.json';
+  private readonly API = '/api/courses';
 
   getAllCourses() {
-    return this.httpClient.get<Course[]>(this.API).pipe(first(), delay(0));
+    return this.httpClient.get<Course[]>(`${this.API}`).pipe(
+      first(),
+      delay(0),
+      tap((res) => console.log(res))
+    );
   }
 }
