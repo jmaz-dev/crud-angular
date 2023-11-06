@@ -2,18 +2,21 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { first, tap, delay, catchError, of } from 'rxjs';
+import { ToastErrorComponent } from 'src/app/shared/components/toast/ToastError/ToastError.component';
 import { Course } from '../../shared/models/course/course';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CursosService {
-  constructor(private httpClient: HttpClient, private _snackBar: MatSnackBar) {}
+  constructor(private httpClient: HttpClient, private toast: MatSnackBar) {}
 
   private readonly API = '/api/courses';
 
-  private onError(err: any) {
-    this._snackBar.open('Ocorreu um erro: ' + err.status, undefined, {
+  private onError() {
+    this.toast.openFromComponent(ToastErrorComponent, {
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
       duration: 3000,
     });
   }
@@ -23,7 +26,7 @@ export class CursosService {
       delay(0),
       catchError((err) => {
         console.error(err.message);
-        this.onError(err);
+        this.onError();
         return of([]);
       })
     );
@@ -34,7 +37,7 @@ export class CursosService {
       first(),
       catchError((err) => {
         console.error(err.message);
-        this.onError(err);
+        this.onError();
         return of(err);
       })
     );
@@ -45,7 +48,7 @@ export class CursosService {
       first(),
       catchError((err) => {
         console.error(err.message);
-        this.onError(err);
+        this.onError();
         return of(err);
       })
     );

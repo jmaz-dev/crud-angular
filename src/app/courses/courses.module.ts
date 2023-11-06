@@ -4,8 +4,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CoursesRoutingModule } from './courses-routing.module';
 import { CoursesComponent } from './courses/courses.component';
 import { SharedModule } from '../shared/shared.module';
-import { CourseFormComponent } from './containers/course-form/course-form.component';
-import { CoursesTableComponent } from './containers/courses-table/courses-table.component';
+import { CourseFormComponent } from './components/course-form/course-form.component';
+import { CoursesTableComponent } from './components/courses-table/courses-table.component';
 
 @NgModule({
   declarations: [CoursesComponent, CourseFormComponent, CoursesTableComponent],
