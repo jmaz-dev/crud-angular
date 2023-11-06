@@ -1,0 +1,13 @@
+.toast_error {
+  top: 10%;
+  background-color: rgb(206, 90, 129);
+  position: absolute;
+  border-radius: 3px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+i {
+  margin: 0.4em 0.6em 0 0;
+  padding: 0;
+}

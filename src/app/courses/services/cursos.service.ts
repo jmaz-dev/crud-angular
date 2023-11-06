@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { first, tap, delay, catchError, of } from 'rxjs';
-import { Course } from '../interfaces/course';
+import { Course } from '../../shared/models/course/course';
 
 @Injectable({
   providedIn: 'root',
@@ -41,7 +41,7 @@ export class CursosService {
   }
 
   deleteById(id: number) {
-    return this.httpClient.delete<string>(`${this.API}/deletar/${id}`).pipe(
+    return this.httpClient.delete<string>(`${this.API}/delete/${id}`).pipe(
       first(),
       catchError((err) => {
         console.error(err.message);
