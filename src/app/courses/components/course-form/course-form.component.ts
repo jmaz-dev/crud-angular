@@ -1,47 +1,54 @@
-import { Component } from '@angular/core';
-import { NonNullableFormBuilder, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { CursosService } from '../../services/cursos.service';
+import { Course } from './../../../shared/models/course/course';
+import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  NonNullableFormBuilder,
+  Validators,
+} from '@angular/forms';
 
 @Component({
   selector: 'app-course-form',
   templateUrl: './course-form.component.html',
   styleUrls: ['./course-form.component.scss'],
 })
-export class CourseFormComponent {
-  form = this.formBuilder.group({
-    name: ['', Validators.required],
-    category: ['', Validators.required],
-  });
+export class CourseFormComponent implements OnInit {
+  form!: FormGroup;
+  @Input() course: Course | undefined;
   loading: boolean = false;
   categorias = ['Front-End', 'Back-End'];
+  @Output() formValue = new EventEmitter();
 
-  constructor(
-    private _snackBar: MatSnackBar,
-    private formBuilder: NonNullableFormBuilder,
-    private courseSrv: CursosService
-  ) {}
+  constructor(private formBuilder: NonNullableFormBuilder) {}
+
+  ngOnInit(): void {
+    this.form = this.formBuilder.group({
+      _id: [this.course?._id],
+      name: [this.course?.name, Validators.required],
+      category: [this.course?.category, Validators.required],
+    });
+  }
+  onSubmit() {
+    if (this.form.valid) {
+      this.formValue.emit(this.form.value);
+    } else {
+      this.validaForm();
+    }
+  }
 
   clean() {
     this.form.reset();
   }
-  onSubmit() {
-    this.courseSrv.addNewCourse(this.form.value).subscribe({
-      complete: () => {
-        this.clean();
-        this.onSuccess();
-      },
-      error: (err) => this.onError(err),
-    });
-  }
-  onError(err: any) {
-    this._snackBar.open('Ocorreu um erro: ' + err.status, undefined, {
-      duration: 3000,
-    });
-  }
-  onSuccess() {
-    this._snackBar.open('Curso adicionado com sucesso.', undefined, {
-      duration: 3000,
+
+  validaForm() {
+    Object.keys(this.form.controls).forEach((campo) => {
+      const c = this.form.get(campo);
+
+      if (c instanceof FormControl) {
+        c.markAsTouched({ onlySelf: true });
+      } else if (c instanceof FormGroup) {
+        this.validaForm();
+      }
     });
   }
 }

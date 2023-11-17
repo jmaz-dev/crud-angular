@@ -10,13 +10,17 @@ export class CoursesTableComponent {
   readonly displayedColumns = ['name', 'category', 'actions'];
   @Input() courses: Course[] = [];
   @Output() add = new EventEmitter(false);
-  @Output() delete = new EventEmitter<number>();
+  @Output() delete = new EventEmitter();
+  @Output() edit = new EventEmitter();
 
   onAdd() {
     this.add.emit(true);
   }
 
-  onDelete(id: number) {
+  onDelete(id: string) {
     this.delete.emit(id);
+  }
+  onEdit(id: string) {
+    this.edit.emit(id);
   }
 }
