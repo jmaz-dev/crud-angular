@@ -29,7 +29,7 @@ export class EditCourseComponent {
           this.onSuccess();
           setTimeout(() => {
             window.location.reload();
-          }, 1500);
+          }, 500);
         }
       },
     });
