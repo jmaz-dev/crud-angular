@@ -9,7 +9,12 @@
       <form [formGroup]="form">
         <mat-form-field>
           <mat-label>Nome</mat-label>
-          <input matInput formControlName="name" />
+          <input matInput formControlName="name" #name />
+          <mat-hint align="end">{{ name.value.length }}/100</mat-hint>
+          <mat-error *ngIf="form.get('name')?.invalid"
+            >{{ getErrorMessage("name") }}
+            <br />
+          </mat-error>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Categoria</mat-label>
@@ -21,6 +26,10 @@
               {{ categoria }}
             </mat-option>
           </mat-select>
+          <mat-error *ngIf="form.get('category')?.invalid"
+            >{{ getErrorMessage("category") }}
+            <br />
+          </mat-error>
         </mat-form-field>
       </form>
 

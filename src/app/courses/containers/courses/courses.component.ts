@@ -12,7 +12,7 @@ import { CursosService } from '../../services/cursos.service';
   styleUrls: ['./courses.component.scss'],
 })
 export class CoursesComponent {
-  courses$: Observable<Course[]>;
+  courses$: Observable<Course[]> | null = null;
 
   constructor(
     private coursesSrv: CursosService,
@@ -20,35 +20,30 @@ export class CoursesComponent {
     private route: ActivatedRoute,
     private toast: MatSnackBar
   ) {
-    this.courses$ = this.coursesSrv.getAllCourses();
+    this.refresh();
   }
 
+  refresh() {
+    this.courses$ = this.coursesSrv.getAllCourses();
+  }
   onAdd() {
     this.router.navigate(['editar/novo'], { relativeTo: this.route });
   }
 
-  onDelete(id: number) {
+  onDelete(id: string) {
     this.coursesSrv.deleteById(id).subscribe({
-      next: (res) => {
-        console.log(res);
-        res ??
-          this.toast.openFromComponent(ToastSuccessComponent, {
-            horizontalPosition: 'right',
-            verticalPosition: 'top',
-            duration: 3000,
-          });
-      },
-      complete: () => {
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
+      next: () => {
+        this.refresh();
+        this.toast.openFromComponent(ToastSuccessComponent, {
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          duration: 3000,
+        });
       },
     });
   }
 
   onEdit(id: string) {
     this.router.navigate([`editar/${id}`], { relativeTo: this.route });
-
-    // console.log(course);
   }
 }

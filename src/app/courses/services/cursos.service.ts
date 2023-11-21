@@ -33,8 +33,6 @@ export class CursosService {
   }
 
   saveCourse(req: Partial<Course>) {
-    debugger;
-    console.log(req);
     if (req._id) {
       return this.update(req);
     } else {
@@ -42,8 +40,8 @@ export class CursosService {
     }
   }
 
-  deleteById(id: number) {
-    return this.httpClient.delete<number>(`${this.API}/delete/${id}`).pipe(
+  deleteById(id: string) {
+    return this.httpClient.delete<string>(`${this.API}/delete/${id}`).pipe(
       first(),
       catchError((err) => {
         console.error(err.message);
@@ -54,9 +52,14 @@ export class CursosService {
   }
 
   getCourseById(id: string | null) {
-    return this.httpClient
-      .get<Course>(`${this.API}/buscarPorId/${id}`)
-      .pipe(first());
+    return this.httpClient.get<Course>(`${this.API}/buscarPorId/${id}`).pipe(
+      first(),
+      catchError((err) => {
+        console.error(err.message);
+        this.onError();
+        return of(err);
+      })
+    );
   }
 
   private new(req: Partial<Course>) {
@@ -70,8 +73,13 @@ export class CursosService {
     );
   }
   private update(req: Partial<Course>) {
-    return this.httpClient
-      .put<Course>(`${this.API}/edit/${req._id}`, req)
-      .pipe(first());
+    return this.httpClient.put<Course>(`${this.API}/edit/${req._id}`, req).pipe(
+      first(),
+      catchError((err) => {
+        console.error(err.message);
+        this.onError();
+        return of(err);
+      })
+    );
   }
 }
