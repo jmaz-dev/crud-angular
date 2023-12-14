@@ -1,11 +1,93 @@
-<section style="display: flex; justify-content: center; margin-top: 15%">
-  <mat-card style="max-width: 400px; text-align: center">
-    <mat-card-header style="width: 100%; display: inline-block">
+<mat-drawer #drawer class="example-sidenav" mode="over" class="sidenav-menu">
+  <header
+    style="
+      margin: 1em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    "
+  >
+    <h2 style="margin: auto">Visualizar Aulas</h2>
+    <button
+      mat-icon-button
+      type="button"
+      aria-label="fechar"
+      (click)="drawer.toggle()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </header>
+  <section *ngIf="course?.lessons?.length; else semAulas">
+    <mat-form-field>
+      <mat-label>Filter</mat-label>
+      <input
+        matInput
+        (keyup)="applyFilter($event)"
+        placeholder="Ex. ium"
+        #input
+      />
+    </mat-form-field>
+
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      class="mat-elevation-z8"
+      aria-describedby="aulas"
+    >
+      <!-- Position Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>No.</th>
+        <td mat-cell *matCellDef="let aula">{{ aula.id }}</td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Título</th>
+        <td mat-cell *matCellDef="let aula">{{ aula.name }}</td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="link">
+        <th mat-header-cell *matHeaderCellDef>URL</th>
+        <td mat-cell *matCellDef="let aula">
+          <strong>https://youtu.be/</strong>{{ aula.link }}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">
+          No data matching the filter "{{ input.value }}"
+        </td>
+      </tr>
+    </table>
+  </section>
+  <ng-template #semAulas style="height: max-content">
+    <p style="text-align: center; font-size: 24px; margin-top: 40%">
+      Não possui aulas
+    </p>
+  </ng-template>
+</mat-drawer>
+<mat-drawer-container autosize></mat-drawer-container>
+<section
+  style="
+    display: flex;
+    justify-content: center;
+    margin-top: 15%;
+    gap: 1em;
+    align-items: center;
+  "
+>
+  <mat-card style="width: 400px; text-align: center">
+    <mat-card-header style="display: inline-block">
       <mat-card-subtitle>Adicionar novo curso</mat-card-subtitle>
       <mat-card-title>Cursos</mat-card-title>
     </mat-card-header>
     <br />
-    <mat-card-content>
+    <mat-card-content style="margin-bottom: 1em">
       <form [formGroup]="form">
         <mat-form-field>
           <mat-label>Nome</mat-label>
@@ -16,6 +98,7 @@
             <br />
           </mat-error>
         </mat-form-field>
+        <br />
         <mat-form-field>
           <mat-label>Categoria</mat-label>
           <mat-select formControlName="category">
@@ -31,15 +114,81 @@
             <br />
           </mat-error>
         </mat-form-field>
-      </form>
+        <mat-toolbar style="height: 56px">
+          <span [matBadge]="course?.lessons?.length" matBadgeOverlap="false"
+            >Nova aula</span
+          >
+          <span style="flex: 1 1 auto"></span>
 
-      <mat-divider></mat-divider>
+          <button
+            mat-icon-button
+            type="button"
+            aria-label="adicionar"
+            (click)="onShow = !onShow"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+
+          <button
+            mat-icon-button
+            type="button"
+            aria-label="visualizar "
+            (click)="drawer.toggle()"
+          >
+            <mat-icon>visibility</mat-icon>
+          </button>
+        </mat-toolbar>
+      </form>
     </mat-card-content>
+    <mat-divider></mat-divider>
     <mat-card-actions>
       <div style="display: flex; justify-content: end; width: 100%; gap: 0.5em">
         <button mat-raised-button (click)="clean()">Limpar</button>
         <button mat-raised-button color="primary" (click)="onSubmit()">
           Salvar
+        </button>
+      </div>
+    </mat-card-actions>
+    <mat-card-footer>
+      <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+    </mat-card-footer>
+  </mat-card>
+  <mat-card
+    *ngIf="onShow"
+    style="max-width: 400px; text-align: center"
+    [class.onError]="false"
+  >
+    <mat-card-header style="width: 100%; display: inline-block">
+      <mat-card-subtitle>Adicionar nova aula</mat-card-subtitle>
+      <mat-card-title>Aulas</mat-card-title>
+    </mat-card-header>
+    <br />
+    <mat-card-content>
+      <mat-form-field>
+        <mat-label>Título da aula</mat-label>
+        <input matInput />
+        <mat-hint align="end">{{ name.value.length }}/100</mat-hint>
+        <mat-error *ngIf="form.get('name')?.invalid"
+          >{{ getErrorMessage("name") }}
+          <br />
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>URL</mat-label>
+        <span matPrefix>&nbsp; https://youtu.be/</span>
+        <input matInput />
+        <mat-hint align="end">Link do youtube</mat-hint>
+        <mat-error *ngIf="form.get('name')?.invalid"
+          >{{ getErrorMessage("name") }}
+          <br />
+        </mat-error>
+      </mat-form-field>
+      <mat-divider></mat-divider>
+    </mat-card-content>
+    <mat-card-actions>
+      <div style="display: flex; justify-content: end; width: 100%; gap: 0.5em">
+        <button mat-raised-button color="warn" (click)="onShow = !onShow">
+          Cancelar
         </button>
       </div>
     </mat-card-actions>

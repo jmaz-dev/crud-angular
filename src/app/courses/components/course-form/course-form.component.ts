@@ -6,6 +6,8 @@ import {
   NonNullableFormBuilder,
   Validators,
 } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
+import { Lesson } from 'src/app/shared/models/lessons/lesson';
 
 @Component({
   selector: 'app-course-form',
@@ -16,12 +18,42 @@ export class CourseFormComponent implements OnInit {
   form!: FormGroup;
   @Input() course: Course | undefined;
   loading: boolean = false;
-  categorias = ['Front-End', 'Back-End', 'oakDSOko-IASDoia'];
+  categorias = ['Front-end', 'Back-end'];
   @Output() formValue = new EventEmitter();
-
+  onShow: boolean = false;
+  displayedColumns: string[] = ['id', 'name', 'link'];
+  dataSource: any;
   constructor(private formBuilder: NonNullableFormBuilder) {}
 
   ngOnInit(): void {
+    this.createForm();
+  }
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+  retrieveLessons(course: Course | undefined) {
+    const lessons = [];
+
+    if (course?.lessons?.length) {
+      course.lessons.forEach((lesson) =>
+        lessons.push(this.createLesson(lesson))
+      );
+    } else {
+      lessons.push(this.createLesson());
+    }
+    return lessons;
+  }
+
+  createLesson(lesson: Lesson = { id: '', name: '', link: '' }) {
+    return this.formBuilder.group({
+      id: [lesson.id],
+      name: [lesson.name],
+      link: [lesson.link],
+    });
+  }
+
+  createForm() {
     this.form = this.formBuilder.group({
       _id: [this.course?._id],
       name: [
@@ -40,8 +72,15 @@ export class CourseFormComponent implements OnInit {
           Validators.maxLength(10),
         ],
       ],
+      lessons: this.formBuilder.array(this.retrieveLessons(this.course)),
     });
+    console.log(this.form);
+
+    console.log(this.form.value);
+    this.dataSource = new MatTableDataSource(this.course?.lessons);
+    console.log(this.dataSource);
   }
+
   onSubmit() {
     if (this.form.valid) {
       console.log(this.form);

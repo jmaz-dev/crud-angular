@@ -22,7 +22,7 @@ export class EditCourseComponent {
   }
 
   onSubmit(form: Course) {
-    console.log(form);
+    // console.log(form);
     this.courseSrv.saveCourse(form).subscribe({
       next: (res) => {
         if (res.status !== 400) {
