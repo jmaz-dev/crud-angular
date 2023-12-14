@@ -4,6 +4,7 @@ import {
   FormControl,
   FormGroup,
   NonNullableFormBuilder,
+  UntypedFormArray,
   Validators,
 } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
@@ -48,11 +49,19 @@ export class CourseFormComponent implements OnInit {
   createLesson(lesson: Lesson = { id: '', name: '', link: '' }) {
     return this.formBuilder.group({
       id: [lesson.id],
-      name: [lesson.name],
-      link: [lesson.link],
+      name: [lesson.name, Validators.required],
+      link: [lesson.link, Validators.required],
     });
   }
 
+  getLessonsFormArray() {
+    return (<UntypedFormArray>this.form.get('lessons')).controls;
+  }
+  addNewLesson() {
+    const lessons = this.form.get('lessons') as UntypedFormArray;
+
+    lessons.push(this.createLesson());
+  }
   createForm() {
     this.form = this.formBuilder.group({
       _id: [this.course?._id],
@@ -74,11 +83,8 @@ export class CourseFormComponent implements OnInit {
       ],
       lessons: this.formBuilder.array(this.retrieveLessons(this.course)),
     });
-    console.log(this.form);
 
-    console.log(this.form.value);
     this.dataSource = new MatTableDataSource(this.course?.lessons);
-    console.log(this.dataSource);
   }
 
   onSubmit() {

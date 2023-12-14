@@ -5,9 +5,12 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      text-align: start;
     "
   >
-    <h2 style="margin: auto">Visualizar Aulas</h2>
+    <h2 style="margin: auto 1px; text-align: start; font-weight: 600">
+      Visualizar Aulas
+    </h2>
     <button
       mat-icon-button
       type="button"
@@ -17,6 +20,7 @@
       <mat-icon>close</mat-icon>
     </button>
   </header>
+  <mat-divider></mat-divider>
   <section *ngIf="course?.lessons?.length; else semAulas">
     <mat-form-field>
       <mat-label>Filter</mat-label>
@@ -72,24 +76,26 @@
   </ng-template>
 </mat-drawer>
 <mat-drawer-container autosize></mat-drawer-container>
-<section
-  style="
-    display: flex;
-    justify-content: center;
-    margin-top: 15%;
-    gap: 1em;
-    align-items: center;
-  "
->
-  <mat-card style="width: 400px; text-align: center">
-    <mat-card-header style="display: inline-block">
-      <mat-card-subtitle>Adicionar novo curso</mat-card-subtitle>
-      <mat-card-title>Cursos</mat-card-title>
-    </mat-card-header>
-    <br />
-    <mat-card-content style="margin-bottom: 1em">
-      <form [formGroup]="form">
-        <mat-form-field>
+<section>
+  <form
+    [formGroup]="form"
+    style="
+      display: flex;
+      justify-content: center;
+      flex: 1 1 auto;
+      margin: 5% 0;
+      gap: 1em;
+      align-items: center;
+    "
+  >
+    <mat-card style="width: 400px; text-align: center">
+      <mat-card-header style="display: inline-block">
+        <mat-card-subtitle>Adicionar novo curso</mat-card-subtitle>
+        <mat-card-title>Cursos</mat-card-title>
+      </mat-card-header>
+      <br />
+      <mat-card-content style="margin-bottom: 1em">
+        <mat-form-field style="margin-bottom: 0.5em">
           <mat-label>Nome</mat-label>
           <input matInput formControlName="name" #name />
           <mat-hint align="end">{{ name.value.length }}/100</mat-hint>
@@ -99,7 +105,7 @@
           </mat-error>
         </mat-form-field>
         <br />
-        <mat-form-field>
+        <mat-form-field style="margin-bottom: 0.5em">
           <mat-label>Categoria</mat-label>
           <mat-select formControlName="category">
             <mat-option
@@ -126,6 +132,7 @@
             aria-label="adicionar"
             (click)="onShow = !onShow"
           >
+            <!-- (click)="addNewLesson()" -->
             <mat-icon>add</mat-icon>
           </button>
 
@@ -138,62 +145,114 @@
             <mat-icon>visibility</mat-icon>
           </button>
         </mat-toolbar>
-      </form>
-    </mat-card-content>
-    <mat-divider></mat-divider>
-    <mat-card-actions>
-      <div style="display: flex; justify-content: end; width: 100%; gap: 0.5em">
-        <button mat-raised-button (click)="clean()">Limpar</button>
-        <button mat-raised-button color="primary" (click)="onSubmit()">
-          Salvar
-        </button>
-      </div>
-    </mat-card-actions>
-    <mat-card-footer>
-      <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
-    </mat-card-footer>
-  </mat-card>
-  <mat-card
-    *ngIf="onShow"
-    style="max-width: 400px; text-align: center"
-    [class.onError]="false"
-  >
-    <mat-card-header style="width: 100%; display: inline-block">
-      <mat-card-subtitle>Adicionar nova aula</mat-card-subtitle>
-      <mat-card-title>Aulas</mat-card-title>
-    </mat-card-header>
-    <br />
-    <mat-card-content>
-      <mat-form-field>
-        <mat-label>Título da aula</mat-label>
-        <input matInput />
-        <mat-hint align="end">{{ name.value.length }}/100</mat-hint>
-        <mat-error *ngIf="form.get('name')?.invalid"
-          >{{ getErrorMessage("name") }}
-          <br />
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>URL</mat-label>
-        <span matPrefix>&nbsp; https://youtu.be/</span>
-        <input matInput />
-        <mat-hint align="end">Link do youtube</mat-hint>
-        <mat-error *ngIf="form.get('name')?.invalid"
-          >{{ getErrorMessage("name") }}
-          <br />
-        </mat-error>
-      </mat-form-field>
+      </mat-card-content>
       <mat-divider></mat-divider>
-    </mat-card-content>
-    <mat-card-actions>
-      <div style="display: flex; justify-content: end; width: 100%; gap: 0.5em">
-        <button mat-raised-button color="warn" (click)="onShow = !onShow">
-          Cancelar
-        </button>
-      </div>
-    </mat-card-actions>
-    <mat-card-footer>
-      <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
-    </mat-card-footer>
-  </mat-card>
+      <mat-card-actions>
+        <div
+          style="display: flex; justify-content: end; width: 100%; gap: 0.5em"
+        >
+          <button type="button" mat-raised-button (click)="clean()">
+            Limpar
+          </button>
+          <button mat-raised-button color="primary" (click)="onSubmit()">
+            Salvar
+          </button>
+        </div>
+      </mat-card-actions>
+      <mat-card-footer>
+        <mat-progress-bar
+          mode="indeterminate"
+          *ngIf="loading"
+        ></mat-progress-bar>
+      </mat-card-footer>
+    </mat-card>
+    <div *ngIf="onShow">
+      <mat-card
+        style="
+          max-width: 600px;
+          text-align: center;
+          overflow-y: auto;
+          max-height: 35em;
+        "
+        [class.onError]="false"
+      >
+        <mat-card-header style="width: 100%; display: inline-block">
+          <mat-card-subtitle>Adicionar nova aula</mat-card-subtitle>
+          <mat-card-title>Aulas</mat-card-title>
+        </mat-card-header>
+        <mat-card-content
+          formArrayName="lessons"
+          *ngFor="let lesson of getLessonsFormArray(); let i = index"
+          style="
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.3em;
+          "
+        >
+          <mat-form-field
+            [formGroupName]="i"
+            style="margin-bottom: 0.5em; max-width: 240px"
+          >
+            <mat-label>Título da aula</mat-label>
+            <input matInput formControlName="name" #lessonName />
+            <mat-hint align="end">{{ lessonName.value.length }}/100</mat-hint>
+            <mat-error *ngIf="form.get('name')?.invalid"
+              >{{ getErrorMessage("name") }}
+              <br />
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field [formGroupName]="i" style="margin-bottom: 0.5em">
+            <mat-label>URL</mat-label>
+            <span matPrefix>&nbsp; https://youtu.be/</span>
+            <input matInput formControlName="link" />
+            <mat-hint align="end">Link do youtube</mat-hint>
+            <mat-error *ngIf="form.get('link')?.invalid"
+              >{{ getErrorMessage("link") }}
+              <br />
+            </mat-error>
+          </mat-form-field>
+          <button
+            style="margin-bottom: 1em"
+            mat-icon-button
+            type="button"
+            aria-label="deletar"
+            color="warn"
+            (click)="('')"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-card-content>
+        <mat-divider></mat-divider>
+        <mat-card-actions>
+          <div
+            style="display: flex; justify-content: end; width: 100%; gap: 0.5em"
+          >
+            <button
+              type="button"
+              mat-raised-button
+              color="warn"
+              (click)="onShow = !onShow"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              mat-raised-button
+              color="primary"
+              (click)="addNewLesson()"
+            >
+              Adicionar
+            </button>
+          </div>
+        </mat-card-actions>
+        <mat-card-footer>
+          <mat-progress-bar
+            mode="indeterminate"
+            *ngIf="loading"
+          ></mat-progress-bar>
+        </mat-card-footer>
+      </mat-card>
+    </div>
+  </form>
 </section>

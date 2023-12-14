@@ -22,17 +22,17 @@ export class EditCourseComponent {
   }
 
   onSubmit(form: Course) {
-    // console.log(form);
-    this.courseSrv.saveCourse(form).subscribe({
-      next: (res) => {
-        if (res.status !== 400) {
-          this.onSuccess();
-          setTimeout(() => {
-            window.location.reload();
-          }, 500);
-        }
-      },
-    });
+    console.log(form);
+    // this.courseSrv.saveCourse(form).subscribe({
+    //   next: (res) => {
+    //     if (res.status !== 400) {
+    //       this.onSuccess();
+    //       setTimeout(() => {
+    //         window.location.reload();
+    //       }, 500);
+    //     }
+    //   },
+    // });
   }
 
   onSuccess() {
