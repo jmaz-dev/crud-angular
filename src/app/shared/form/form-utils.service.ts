@@ -34,14 +34,16 @@ export class FormUtilsService {
     }
     if (field?.hasError('maxlength')) {
       const maxLength: number = field?.errors
-        ? field.errors['maxlength']['requiredLength']
+        ? // retorna o valor estipulado no validator
+          field.errors['maxlength']['requiredLength']
         : 100;
 
       return `* Máximo ${maxLength} caracteres.`;
     }
     if (field?.hasError('minlength')) {
       const minLength: number = field?.errors
-        ? field.errors['minlength']['requiredLength']
+        ? // retorna o valor estipulado no validator
+          field.errors['minlength']['requiredLength']
         : 5;
 
       return `* Mínimo ${minLength} caracteres.`;

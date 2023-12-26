@@ -13,10 +13,12 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatSelectModule } from '@angular/material/select';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   exports: [
     MatTableModule,
+    MatTooltipModule,
     MatSelectModule,
     MatSidenavModule,
     MatBadgeModule,

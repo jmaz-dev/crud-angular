@@ -131,6 +131,8 @@
             type="button"
             aria-label="adicionar"
             (click)="onShow = !onShow"
+            matTooltip="Adicionar aulas"
+            matTooltipPosition="above"
           >
             <mat-icon>add</mat-icon>
           </button>
@@ -138,8 +140,10 @@
           <button
             mat-icon-button
             type="button"
-            aria-label="visualizar "
+            aria-label="visualizar"
             (click)="drawer.toggle()"
+            matTooltip="Visualizar aulas"
+            matTooltipPosition="above"
           >
             <mat-icon>visibility</mat-icon>
           </button>

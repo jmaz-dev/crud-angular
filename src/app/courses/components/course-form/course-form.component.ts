@@ -18,10 +18,10 @@ import { Lesson } from 'src/app/shared/models/lessons/lesson';
 export class CourseFormComponent implements OnInit {
   form!: FormGroup;
   @Input() course: Course | undefined;
-  loading: boolean = false;
-  categorias = ['Front-end', 'Back-end'];
   @Output() formValue = new EventEmitter();
+  loading: boolean = false;
   onShow: boolean = false;
+  categorias = ['Front-end', 'Back-end'];
   displayedColumns: string[] = ['id', 'name', 'link'];
   dataSource: any;
   constructor(
@@ -114,7 +114,6 @@ export class CourseFormComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.formUtils.isFormArrayRequired(this.form, 'lessons'));
     if (this.form.valid) {
       console.log(this.form);
       return this.formValue.emit(this.form.value);
