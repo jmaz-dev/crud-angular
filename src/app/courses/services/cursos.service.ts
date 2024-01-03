@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { first, tap, delay, catchError, of, map } from 'rxjs';
+import { first, catchError, of } from 'rxjs';
 import { ToastErrorComponent } from 'src/app/shared/components/toast/ToastError/ToastError.component';
 import { Course } from '../../shared/models/course/course';
 

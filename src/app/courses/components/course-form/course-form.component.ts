@@ -115,10 +115,8 @@ export class CourseFormComponent implements OnInit {
 
   onSubmit() {
     if (this.form.valid) {
-      console.log(this.form);
       return this.formValue.emit(this.form.value);
     }
-    console.log(this.form);
 
     return this.formUtils.validateAllFormField(this.form);
   }
